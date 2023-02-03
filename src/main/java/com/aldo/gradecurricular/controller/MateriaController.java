@@ -24,46 +24,40 @@ public class MateriaController {
 
 	@Autowired
 	private MateriaRepository materiaRepository;
-	
+
 	@Autowired
 	private MateriaService materiaService;
-	
+
 	@GetMapping
-	public ResponseEntity<List<MateriaEntity>> listarMaterias(){
-		return ResponseEntity.status(HttpStatus.OK).body(this.materiaRepository.findAll());
+	public ResponseEntity<List<MateriaEntity>> listarMaterias() {
+		return ResponseEntity.status(HttpStatus.OK).body(this.materiaService.listar());
 	}
-	
+
 	@GetMapping("/{id}")
-	public ResponseEntity<MateriaEntity> buscaMateria(@PathVariable Long id){
+	public ResponseEntity<MateriaEntity> buscaMateria(@PathVariable Long id) {
 		return ResponseEntity.status(HttpStatus.OK).body(this.materiaRepository.findById(id).get());
 	}
-	
+
 	@PostMapping
-	private ResponseEntity<Boolean> cadastrarMateria(@RequestBody MateriaEntity materia){
+	private ResponseEntity<Boolean> cadastrarMateria(@RequestBody MateriaEntity materia) {
 		try {
 			this.materiaRepository.save(materia);
-			return ResponseEntity.status(HttpStatus.OK).body(true);
+			return ResponseEntity.status(HttpStatus.CREATED).body(true);
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.OK).body(false);	
+			return ResponseEntity.status(HttpStatus.OK).body(false);
 		}
-		
-	}
-	
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Boolean> excluirMateria(@PathVariable Long id){
-			return ResponseEntity.status(HttpStatus.OK).body(this.materiaService.exlcuir(id));
 
-		
 	}
-	
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Boolean> excluirMateria(@PathVariable Long id) {
+		return ResponseEntity.status(HttpStatus.OK).body(this.materiaService.exlcuir(id));
+	}
+
 	@PutMapping
 	public ResponseEntity<Boolean> atualizarMateria(@RequestBody MateriaEntity materia) {
-			
-	
-			
-			return ResponseEntity.status(HttpStatus.OK).body(this.materiaService.atualizar(materia));
+		return ResponseEntity.status(HttpStatus.OK).body(this.materiaService.atualizar(materia));
 
 	}
-		
-			
+
 }
