@@ -2,11 +2,12 @@ package com.aldo.gradecurricular.service;
 
 import java.util.List;
 
+import com.aldo.gradecurricular.dto.MateriaDto;
 import com.aldo.gradecurricular.entity.MateriaEntity;
 
 public interface IMateriaService {
 
-	public Boolean atualizar(final MateriaEntity materia);
+	public Boolean atualizar(final MateriaDto materia);
 
 	public Boolean exlcuir(final Long id);
 
@@ -14,5 +15,5 @@ public interface IMateriaService {
 
 	public MateriaEntity consultar(final Long id);
 
-	public Boolean cadastrar(final MateriaEntity materia);
+	public Boolean cadastrar(final MateriaDto materia);
 }

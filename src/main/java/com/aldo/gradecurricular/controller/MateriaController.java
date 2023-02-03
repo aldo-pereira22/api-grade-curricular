@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aldo.gradecurricular.dto.MateriaDto;
 import com.aldo.gradecurricular.entity.MateriaEntity;
-import com.aldo.gradecurricular.repository.MateriaRepository;
 import com.aldo.gradecurricular.service.MateriaService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/materia")
@@ -36,7 +38,7 @@ public class MateriaController {
 	}
 
 	@PostMapping
-	private ResponseEntity<Boolean> cadastrarMateria(@RequestBody MateriaEntity materia) {
+	private ResponseEntity<Boolean> cadastrarMateria(@Valid @RequestBody MateriaDto materia) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(this.materiaService.cadastrar(materia));
 
 	}
@@ -47,7 +49,7 @@ public class MateriaController {
 	}
 
 	@PutMapping
-	public ResponseEntity<Boolean> atualizarMateria(@RequestBody MateriaEntity materia) {
+	public ResponseEntity<Boolean> atualizarMateria(@Valid @RequestBody MateriaDto materia) {
 		return ResponseEntity.status(HttpStatus.OK).body(this.materiaService.atualizar(materia));
 
 	}
