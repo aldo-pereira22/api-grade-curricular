@@ -23,9 +23,6 @@ import com.aldo.gradecurricular.service.MateriaService;
 public class MateriaController {
 
 	@Autowired
-	private MateriaRepository materiaRepository;
-
-	@Autowired
 	private MateriaService materiaService;
 
 	@GetMapping
@@ -34,18 +31,13 @@ public class MateriaController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<MateriaEntity> buscaMateria(@PathVariable Long id) {
-		return ResponseEntity.status(HttpStatus.OK).body(this.materiaRepository.findById(id).get());
+	public ResponseEntity<MateriaEntity> consultaMateria(@PathVariable Long id) {
+		return ResponseEntity.status(HttpStatus.OK).body(this.materiaService.consultar(id));
 	}
 
 	@PostMapping
 	private ResponseEntity<Boolean> cadastrarMateria(@RequestBody MateriaEntity materia) {
-		try {
-			this.materiaRepository.save(materia);
-			return ResponseEntity.status(HttpStatus.CREATED).body(true);
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.OK).body(false);
-		}
+		return ResponseEntity.status(HttpStatus.CREATED).body(this.materiaService.cadastrar(materia));
 
 	}
 
