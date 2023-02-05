@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -17,16 +16,24 @@ import com.aldo.gradecurricular.repository.MateriaRepository;
 @Service
 public class MateriaService implements IMateriaService {
 
-	@Autowired
-	MateriaRepository materiaRepository;
+	
+	private static final String MENSAGEM_ERRO = "Erro interno identificado. Contate o suporte";
+	private static final String MATERIA_NAO_ENCONTRADA = "Matéria não encontrada";
+	private MateriaRepository materiaRepository;
+	private ModelMapper mapper;
+	
+	public MateriaService(MateriaRepository materiaRepository) {
+		this.mapper = new ModelMapper();
+		this.materiaRepository = materiaRepository;
+	}
+	
 
 	@Override
 	public Boolean atualizar(MateriaDto materia) {
 		try {
-			ModelMapper mapper = new ModelMapper();
+		
 			this.consultar(materia.getId());
-
-			MateriaEntity materiaEntityAtualizada = mapper.map(materia,MateriaEntity.class);
+			MateriaEntity materiaEntityAtualizada = this.mapper.map(materia,MateriaEntity.class);
 
 			this.materiaRepository.save(materiaEntityAtualizada);
 
@@ -69,6 +76,24 @@ public class MateriaService implements IMateriaService {
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+//	@Override
+//	public MateriaDto consultar(Long id) {
+//		try {
+//			Optional<MateriaEntity> materiaOptional = this.materiaRepository.findById(id);
+//			if (materiaOptional.isPresent()) {
+//				return this.mapper.map(materiaOptional.get(), MateriaDto.class);
+//			}
+//			throw new MateriaException(MATERIA_NAO_ENCONTRADA, HttpStatus.NOT_FOUND);
+//		} catch (MateriaException m) {
+//			throw m;
+//		} catch (Exception e) {
+//			throw new MateriaException(MENSAGEM_ERRO,
+//					HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
+//	}
+	
+	
 	@Override
 	public List<MateriaEntity> listar() {
 		try {
@@ -82,8 +107,8 @@ public class MateriaService implements IMateriaService {
 	@Override
 	public Boolean cadastrar(MateriaDto materia) {
 		try {
-			ModelMapper mapper = new ModelMapper();
-			MateriaEntity materiaEnt = mapper.map(materia,MateriaEntity.class);
+
+			MateriaEntity materiaEnt = this.mapper.map(materia,MateriaEntity.class);
 			this.materiaRepository.save(materiaEnt);
 			return true;
 		} catch (Exception e) {
