@@ -1,4 +1,4 @@
-package com.aldo.gradecurricular.handler;
+package com.aldo.gradecurricular.model;
 
 import java.util.Map;
 

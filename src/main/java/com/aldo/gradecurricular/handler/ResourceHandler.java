@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.aldo.gradecurricular.exceptions.MateriaException;
-import com.aldo.gradecurricular.handler.ErrorMapResponse.ErrorMapResponseBuilder;
+import com.aldo.gradecurricular.model.ErrorMapResponse;
 import com.aldo.gradecurricular.model.ErrorResponse;
+import com.aldo.gradecurricular.model.ErrorMapResponse.ErrorMapResponseBuilder;
 import com.aldo.gradecurricular.model.ErrorResponse.ErrorResponseBuilder;
 
 @ControllerAdvice
