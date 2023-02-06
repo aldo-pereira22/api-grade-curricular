@@ -13,7 +13,7 @@ public interface IMateriaService {
 
 	public List<MateriaEntity> listar();
 
-	public MateriaEntity consultar(final Long id);
+	public MateriaDto consultar(final Long id);
 
 	public Boolean cadastrar(final MateriaDto materia);
 }

@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +17,14 @@ import com.aldo.gradecurricular.entity.MateriaEntity;
 import com.aldo.gradecurricular.exceptions.MateriaException;
 import com.aldo.gradecurricular.repository.MateriaRepository;
 
+@CacheConfig(cacheNames = "materia")
 @Service
 public class MateriaService implements IMateriaService {
 
 	
 	private static final String MENSAGEM_ERRO = "Erro interno identificado. Contate o suporte";
 	private static final String MATERIA_NAO_ENCONTRADA = "Matéria não encontrada";
+	
 	private MateriaRepository materiaRepository;
 	private ModelMapper mapper;
 	
@@ -27,7 +33,7 @@ public class MateriaService implements IMateriaService {
 		this.materiaRepository = materiaRepository;
 	}
 	
-
+	
 	@Override
 	public Boolean atualizar(MateriaDto materia) {
 		try {
@@ -61,39 +67,42 @@ public class MateriaService implements IMateriaService {
 		}
 	}
 
+//	@Override
+//	public MateriaEntity consultar(Long id) {
+//		try {
+//			Optional<MateriaEntity> materiaOptional = this.materiaRepository.findById(id);
+//			if (materiaOptional.isPresent()) {
+//				return materiaOptional.get();
+//			}
+//			throw new MateriaException("Matéria não encontrada", HttpStatus.NOT_FOUND);
+//		} catch (MateriaException m) {
+//			throw m;
+//		} catch (Exception e) {
+//			throw new MateriaException("Erro interno identificado. Contate o suporte",
+//					HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
+//	}
+//	
+	
+	@CachePut(key ="#id")
 	@Override
-	public MateriaEntity consultar(Long id) {
+	public MateriaDto consultar(Long id) {
 		try {
 			Optional<MateriaEntity> materiaOptional = this.materiaRepository.findById(id);
 			if (materiaOptional.isPresent()) {
-				return materiaOptional.get();
+				return this.mapper.map(materiaOptional.get(), MateriaDto.class);
 			}
-			throw new MateriaException("Matéria não encontrada", HttpStatus.NOT_FOUND);
+			throw new MateriaException(MATERIA_NAO_ENCONTRADA, HttpStatus.NOT_FOUND);
 		} catch (MateriaException m) {
 			throw m;
 		} catch (Exception e) {
-			throw new MateriaException("Erro interno identificado. Contate o suporte",
+			throw new MateriaException(MENSAGEM_ERRO,
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
-//	@Override
-//	public MateriaDto consultar(Long id) {
-//		try {
-//			Optional<MateriaEntity> materiaOptional = this.materiaRepository.findById(id);
-//			if (materiaOptional.isPresent()) {
-//				return this.mapper.map(materiaOptional.get(), MateriaDto.class);
-//			}
-//			throw new MateriaException(MATERIA_NAO_ENCONTRADA, HttpStatus.NOT_FOUND);
-//		} catch (MateriaException m) {
-//			throw m;
-//		} catch (Exception e) {
-//			throw new MateriaException(MENSAGEM_ERRO,
-//					HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-//	}
-	
-	
+
+	@CachePut(unless = "#result.size()<3")
 	@Override
 	public List<MateriaEntity> listar() {
 		try {
@@ -102,18 +111,22 @@ public class MateriaService implements IMateriaService {
 			return new ArrayList<>();
 		}
 	}
+	
 
 
+	@CacheEvict(allEntries = true)
 	@Override
 	public Boolean cadastrar(MateriaDto materia) {
 		try {
 
 			MateriaEntity materiaEnt = this.mapper.map(materia,MateriaEntity.class);
 			this.materiaRepository.save(materiaEnt);
-			return true;
+			return Boolean.TRUE;
 		} catch (Exception e) {
-			return false;
+			return Boolean.FALSE;
 		}
 	}
+	
+
 
 }

@@ -35,7 +35,6 @@ public class ResourceHandler {
 		errorMap.erros(erros)
 			.httpStatus(HttpStatus.BAD_REQUEST.value())
 			.timeStamp(System.currentTimeMillis());
-		
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMap.build());
 	}
 	
