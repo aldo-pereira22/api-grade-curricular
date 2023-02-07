@@ -11,17 +11,14 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.aldo.gradecurricular.exceptions.MateriaException;
-import com.aldo.gradecurricular.model.ErrorMapResponse;
-import com.aldo.gradecurricular.model.ErrorResponse;
-import com.aldo.gradecurricular.model.ErrorMapResponse.ErrorMapResponseBuilder;
-import com.aldo.gradecurricular.model.ErrorResponse.ErrorResponseBuilder;
+import com.aldo.gradecurricular.model.Response;
 
 @ControllerAdvice
 public class ResourceHandler {
 	
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<ErrorMapResponse> handlerMethodArgumentNotValidException(MethodArgumentNotValidException m){
+	public ResponseEntity<Response<Map<String, String>>> handlerMethodArgumentNotValidException(MethodArgumentNotValidException m){
 		
 		Map<String,String> erros = new HashMap<>();
 		m.getBindingResult().getAllErrors().forEach(erro ->{
@@ -31,20 +28,20 @@ public class ResourceHandler {
 			
 		});
 		
-		ErrorMapResponseBuilder errorMap = ErrorMapResponse.builder();
+		Response<Map<String,String>> response = new Response<>();
+		response.setStatusCode(HttpStatus.BAD_REQUEST.value());
+		response.setData(erros);
 		
-		errorMap.erros(erros)
-			.httpStatus(HttpStatus.BAD_REQUEST.value())
-			.timeStamp(System.currentTimeMillis());
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMap.build());
+
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 	}
 	
 	@ExceptionHandler(MateriaException.class)
-	public ResponseEntity<ErrorResponse> handlerMateriaException(MateriaException m){
-		ErrorResponseBuilder erro = ErrorResponse.builder();
-		erro.httpStatus(m.getHttpStatus().value());
-		erro.mensagem(m.getMessage());
-		erro.timeStamp(System.currentTimeMillis());
-		return ResponseEntity.status(m.getHttpStatus()).body(erro.build());
+	public ResponseEntity<Response<String>> handlerMateriaException(MateriaException m){
+		Response<String> response = new Response<>();
+		
+		response.setStatusCode(m.getHttpStatus().value());
+		response.setData(m.getMessage());
+		return ResponseEntity.status(m.getHttpStatus()).body(response);
 	}
 }

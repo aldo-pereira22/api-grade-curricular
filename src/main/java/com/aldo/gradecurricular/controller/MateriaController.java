@@ -63,7 +63,8 @@ public class MateriaController {
 				.withSelfRel());
 		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).excluirMateria(id))
 				.withRel(DELETE));
-		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).atualizarMateria(materia))
+		response.add(WebMvcLinkBuilder
+				.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).atualizarMateria(materia))
 				.withRel(UPDATE));
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
