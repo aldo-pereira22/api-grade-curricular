@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -124,6 +125,15 @@ public class MateriaService implements IMateriaService {
 		} catch (Exception e) {
 			return Boolean.FALSE;
 		}
+	}
+	
+	
+	@Override
+	public List<MateriaDto> listarPorHorarioMinimo(int horaMinima) {
+		
+		return this.mapper.map(this.materiaRepository.findByHoraMinima(horaMinima),
+				new TypeToken<List<MateriaDto>>() {
+				}.getType());
 	}
 	
 
