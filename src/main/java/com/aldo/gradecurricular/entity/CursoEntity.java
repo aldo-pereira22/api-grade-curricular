@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.ManyToAny;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -42,7 +43,7 @@ public class CursoEntity implements Serializable{
 	@Column(name = "codigo")
 	private String codigo;
 	
-	@OneToMany(fetch = FetchType.LAZY)
+	@ManyToAny(fetch = FetchType.LAZY)
 	@JoinColumn(name = "materia_id")
 	private List<MateriaEntity> materias;
 
